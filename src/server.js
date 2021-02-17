@@ -1,36 +1,55 @@
 const express = require('express')
-// const http = require('http')
-// const mongoose = require('mongoose')
-// const { ApolloServer } = require('apollo-server-express')
+const http = require('http')
+const mongoose = require('mongoose')
+const { ApolloServer } = require('apollo-server-express')
+const { makeExecutableSchema } = require('graphql-tools')
+const { gql } = require('apollo-server');
+
+const type = gql`
+  type Query {
+    _empty: String
+  }
+  type Mutation {
+    _empty: String
+  }
+`;
+
+const schema = makeExecutableSchema({
+  typeDefs: type,
+  resolvers: {
+      Query: {},
+      Mutation: {},
+  },
+});
 
 // create apollo server
-// const server = new ApolloServer({
-//   schema,
-//   subscriptions: {
-//     onConnect: () => console.info('✅ Connected to websocket'),
-//     onDisconnect: () => console.info('Disconnect from websocket'),
-//   },
-// });
+const server = new ApolloServer({
+  schema,
+  subscriptions: {
+    onConnect: () => console.info('✅ Connected to websocket'),
+    onDisconnect: () => console.info('Disconnect from websocket'),
+  },
+});
 
 // create express app
 const app = express();
 
 // apply apollo middlleware
-// server.applyMiddleware({
-//   app,
-//   cors: true,
-//   tracing: true,
-//   playground: process.env.NODE_ENV === 'development',
-//   onHealthCheck: () =>
-//     // eslint-disable-next-line no-undef
-//     new Promise((resolve, reject) => {
-//       if (mongoose.connection.readyState > 0) {
-//         resolve();
-//       } else {
-//         reject();
-//       }
-//     }),
-// });
+server.applyMiddleware({
+  app,
+  cors: true,
+  tracing: true,
+  playground: process.env.NODE_ENV === 'development',
+  onHealthCheck: () =>
+    // eslint-disable-next-line no-undef
+    new Promise((resolve, reject) => {
+      if (mongoose.connection.readyState > 0) {
+        resolve();
+      } else {
+        reject();
+      }
+    }),
+});
 
 // error handler, send stacktrace only during development
 app.use((
@@ -45,7 +64,7 @@ app.use((
   })
 );
 
-// const httpServer = http.createServer(app);
-// server.installSubscriptionHandlers(httpServer);
+const httpServer = http.createServer(app);
+server.installSubscriptionHandlers(httpServer);
 
-module.exports = app;
+module.exports = httpServer;
