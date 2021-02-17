@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import config from '~/core/config'; // eslint-disable-line import/order
+const mongoose = require('mongoose')
+const httpStatus = require('http-status')
 
-import mongoose from 'mongoose';
-import httpStatus from 'http-status';
+const app = require('./server')
 
 // connect to mongo db
-mongoose.connection.openUri(config.mongodbUri, {
+mongoose.connection.openUri(process.env.MONGODB_URI, {
   autoIndex: true,
   poolSize: 50,
   bufferMaxEntries: 0,
@@ -28,8 +28,8 @@ mongoose.connection.on('disconnected', () =>
 );
 
 // listen on port config.port
-app.listen(config.port, () => {
-  console.info(`✅ Server started on port ${config.port} (${config.nodeEnv}).`);
+app.listen(process.env.PORT, () => {
+  console.info(`✅ Server started on port ${process.env.PORT} (${process.env.NODE_ENV}).`);
 });
 
-export default app;
+module.exports = app;
