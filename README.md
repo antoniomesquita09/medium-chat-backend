@@ -20,4 +20,4 @@ Open [http://localhost:4000](http://localhost:4000) to work in your GraphQL apol
 
 ### Medium tutorial
 
-[https://medium.com/](https://medium.com/)
+[https://antoniomesquita09.medium.com/](https://antoniomesquita09.medium.com/)
