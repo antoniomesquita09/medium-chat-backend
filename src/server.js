@@ -2,32 +2,15 @@ const express = require('express')
 const http = require('http')
 const mongoose = require('mongoose')
 const { ApolloServer } = require('apollo-server-express')
-const { makeExecutableSchema } = require('graphql-tools')
-const { gql } = require('apollo-server');
 
-const type = gql`
-  type Query {
-    _empty: String
-  }
-  type Mutation {
-    _empty: String
-  }
-`;
-
-const schema = makeExecutableSchema({
-  typeDefs: type,
-  resolvers: {
-      Query: {},
-      Mutation: {},
-  },
-});
+const schema = require('./graphql/schema')
 
 // create apollo server
 const server = new ApolloServer({
   schema,
   subscriptions: {
     onConnect: () => console.info('✅ Connected to websocket'),
-    onDisconnect: () => console.info('Disconnect from websocket'),
+    onDisconnect: () => console.info('❌ Disconnect from websocket'),
   },
 });
 
